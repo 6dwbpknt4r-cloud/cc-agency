@@ -21,46 +21,51 @@ export default function Home() {
         </button>
       </header>
 
-      {/* HERO */}
-    
-      <section className="text-center flex flex-col items-center justify-center px-6 pt-44 pb-32">
-        <p className="text-gray-400 tracking-widest text-sm">
-          PREMIUM WEB DESIGN & AUTOMATION
-        </p>
+     {/* HERO */}
+<section className="relative flex flex-col items-center justify-center text-center px-6 pt-40 pb-32 overflow-hidden">
 
-        <h1 className="text-5xl md:text-7xl font-bold mt-6 leading-tight">
-          We Build Websites That <br />
-          Turn Visitors Into Customers
-        </h1>
+  {/* Background Glow */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-black" />
+  <div className="absolute top-[-200px] w-[600px] h-[600px] bg-yellow-500/10 blur-[120px] rounded-full" />
+  <div className="absolute bottom-[-200px] w-[600px] h-[600px] bg-white/5 blur-[120px] rounded-full" />
 
-        <p className="text-gray-400 mt-6 max-w-2xl">
-          High-end websites, AI systems, and marketing funnels designed to
-          help local businesses grow faster.
-        </p>
-<div className="flex flex-wrap justify-center gap-4 mt-10">
+  {/* Content */}
+  <div className="relative z-10 max-w-4xl">
 
-  <a
-    href="https://calendly.com"
-    target="_blank"
-    className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:scale-105 transition inline-block"
-  >
-    Book Free Strategy Call
-  </a>
+    <p className="text-yellow-400 tracking-[0.3em] text-xs uppercase">
+      Premium Web Design & Automation
+    </p>
 
-  <a
-    href="#contact"
-    className="border border-white/30 px-6 py-3 rounded-full hover:bg-white hover:text-black transition inline-block"
-  >
-    Send Message
-  </a>
+    <h1 className="text-5xl md:text-7xl font-bold mt-6 leading-tight">
+      We Build Websites That <br />
+      <span className="text-yellow-400">Turn Traffic Into Revenue</span>
+    </h1>
 
-</div>
-        
-      </section>
-<section className="text-center py-10 text-gray-400 border-y border-white/10">
-  <p className="text-sm tracking-widest">
-    FREE WEBSITE AUDIT + GROWTH PLAN FOR LOCAL BUSINESSES
-  </p>
+    <p className="text-gray-400 mt-6 max-w-2xl mx-auto text-lg">
+      High-end websites, automation systems, and conversion funnels
+      built for local businesses ready to scale.
+    </p>
+
+    <div className="flex flex-col md:flex-row gap-4 mt-10 justify-center">
+
+      <a
+        href="https://calendly.com"
+        target="_blank"
+        className="bg-yellow-500 text-black px-8 py-4 rounded-full font-semibold hover:scale-105 transition"
+      >
+        Book Strategy Call
+      </a>
+
+      <a
+        href="#work"
+        className="border border-white/20 px-8 py-4 rounded-full hover:bg-white hover:text-black transition"
+      >
+        View Our Work
+      </a>
+
+    </div>
+
+  </div>
 </section>
       {/* TRUST */}
       <section className="text-center text-gray-400 border-y border-white/10 py-10">
