@@ -1,0 +1,180 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  businesses    Business[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Industry {
+  ROOFING
+  PLUMBING
+  HVAC
+  ELECTRICIAN
+  LANDSCAPING
+  RESTAURANT
+  CAFE
+  CLEANING
+  AUTO_DETAILING
+  BARBERSHOP
+  SALON
+  OTHER
+}
+
+model Business {
+  id            String   @id @default(cuid())
+  name          String
+  industry      Industry
+  logo          String?
+  primaryColor  String   @default("#000000")
+  secondaryColor String  @default("#ffffff")
+  phone         String?
+  website       String?
+  address       String?
+  hours         Json?
+  
+  twilioSid     String?
+  twilioAuthToken String?
+  twilioNumber  String?
+  
+  googleCalendarId String?
+  googleRefreshToken String?
+
+  ownerId       String
+  owner         User     @relation(fields: [ownerId], references: [id])
+  
+  leads         Lead[]
+  appointments  Appointment[]
+  automations   Automation[]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum LeadTemperature {
+  HOT
+  WARM
+  COLD
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  BOOKED
+  COMPLETED
+  LOST
+}
+
+model Lead {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?
+  phone         String?
+  source        String?  // e.g. "WIDGET", "SMS", "FORM"
+  
+  temperature   LeadTemperature @default(WARM)
+  status        LeadStatus      @default(NEW)
+  
+  businessId    String
+  business      Business @relation(fields: [businessId], references: [id])
+  
+  conversations Conversation[]
+  appointments  Appointment[]
+  
+  notes         String?
+  metadata      Json?    // For industry specific qualification data
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Conversation {
+  id            String   @id @default(cuid())
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id])
+  
+  role          String   // "AI", "USER", "SYSTEM"
+  content       String
+  channel       String   // "SMS", "WIDGET"
+  
+  createdAt     DateTime @default(now())
+}
+
+model Appointment {
+  id            String   @id @default(cuid())
+  leadId        String
+  lead          Lead     @relation(fields: [leadId], references: [id])
+  
+  businessId    String
+  business      Business @relation(fields: [businessId], references: [id])
+  
+  startTime     DateTime
+  endTime       DateTime
+  status        String   // "SCHEDULED", "COMPLETED", "CANCELLED"
+  
+  googleEventId String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Automation {
+  id            String   @id @default(cuid())
+  businessId    String
+  business      Business @relation(fields: [businessId], references: [id])
+  
+  type          String   // "FOLLOW_UP", "REVIEW_REQUEST", "MISSED_CALL"
+  trigger       String   // e.g. "NO_RESPONSE_1H", "JOB_COMPLETED"
+  enabled       Boolean  @default(true)
+  
+  delayHours    Int?
+  template      String?
+  
+  createdAt     DateTime @default(now())
+}
